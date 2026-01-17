@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { useRef } from "react";
 
@@ -41,17 +42,33 @@ export function useFooterScroll() {
 }
 
 export default function Footer({ opacity }: { opacity: Animated.Value }) {
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768;
+
   return (
     <Animated.View style={[styles.footer, { opacity }]}>
-      <View style={styles.footerContainer}>
-        <Text style={styles.footerText}>
-          {" "}
-          © Designed and Developed by Dickie Wong{" "}
+      <View
+        style={[
+          styles.footerContainer,
+          isMobile && styles.footerContainerMobile,
+        ]}
+      >
+        <Text style={[styles.footerText, isMobile && styles.footerTextMobile]}>
+          © Designed and Developed by Dickie Wong
         </Text>
-        <Text style={[styles.footerText, styles.middleText]}>
+        <Text
+          style={[
+            styles.footerText,
+            styles.middleText,
+            isMobile && styles.footerTextMobile,
+            isMobile && styles.middleTextMobile,
+          ]}
+        >
           Copyright © 2026 DW
         </Text>
-        <Text style={styles.footerText}>Build with React Native ❤️</Text>
+        <Text style={[styles.footerText, isMobile && styles.footerTextMobile]}>
+          Build with React Native ❤️
+        </Text>
       </View>
     </Animated.View>
   );
@@ -77,6 +94,12 @@ export const styles = StyleSheet.create({
     height: 70,
     gap: "50%",
   },
+  footerContainerMobile: {
+    flexDirection: "column",
+    height: "auto",
+    gap: 10,
+    paddingVertical: 15,
+  },
   footerText: {
     flex: 1,
     textAlign: "center",
@@ -86,9 +109,16 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#fbedff",
   },
+  footerTextMobile: {
+    fontSize: 12,
+    flex: 0,
+  },
   middleText: {
     position: "absolute",
     left: 0,
     right: 0,
+  },
+  middleTextMobile: {
+    position: "relative",
   },
 });

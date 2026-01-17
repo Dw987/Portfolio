@@ -4,6 +4,7 @@ import {
   ImageBackground,
   Linking,
   Pressable,
+  useWindowDimensions,
 } from "react-native";
 import { Platform, StyleSheet, View } from "react-native";
 
@@ -17,6 +18,14 @@ import Footer, {
   useFooterScroll,
   styles as scrollStyles,
 } from "../../components/footer";
+
+// Import images
+import emailIcon from "@/assets/images/logo/email.png";
+import githubIcon from "@/assets/images/logo/github.png";
+import linkedinIcon from "@/assets/images/logo/linkedin.png";
+import doggoImg from "@/assets/images/doggo.jpg";
+import developerImg from "@/assets/images/developer.png";
+import backgroundImg from "@/assets/images/purple_space_stars.jpg";
 
 type SocialLogoProps = {
   source: any;
@@ -39,20 +48,24 @@ function SocialLogo({ source, url }: SocialLogoProps) {
 }
 
 export default function HomeScreen() {
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1024;
+
   const IMAGES_DATA = [
     {
       id: "1",
-      source: require("@/assets/images/logo/email.png"),
+      source: emailIcon,
       url: "mailto:dickie.wongwh@gmail.com",
     },
     {
       id: "2",
-      source: require("@/assets/images/logo/github.png"),
+      source: githubIcon,
       url: "https://github.com/Dw987",
     },
     {
       id: "3",
-      source: require("@/assets/images/logo/linkedin.png"),
+      source: linkedinIcon,
       url: "https://www.linkedin.com/in/dickie-wong-9407831a8",
     },
   ];
@@ -64,20 +77,34 @@ export default function HomeScreen() {
   }) => <SocialLogo source={item.source} url={item.url} />;
 
   const { opacity, onScroll } = useFooterScroll();
+
   return (
     <ImageBackground
-      source={require("@/assets/images/purple_space_stars.jpg")}
+      source={backgroundImg}
       style={{ flex: 1, width: "100%", height: "100%" }}
       resizeMode="cover"
     >
       <SafeAreaProvider>
         <ScrollView
-          contentContainerStyle={[styles.scrollContainer]}
+          contentContainerStyle={[
+            styles.scrollContainer,
+            isMobile && styles.scrollContainerMobile,
+          ]}
           onScroll={onScroll}
           scrollEventThrottle={16}
         >
-          <View style={styles.parentContainer}>
-            <View style={styles.childContainer}>
+          <View
+            style={[
+              styles.parentContainer,
+              isMobile && styles.parentContainerMobile,
+            ]}
+          >
+            <View
+              style={[
+                styles.childContainer,
+                isMobile && styles.childContainerMobile,
+              ]}
+            >
               <Intro type="subtitle">
                 Hi There ! <HelloWave />
               </Intro>
@@ -94,12 +121,23 @@ export default function HomeScreen() {
               />
             </View>
             <Image
-              source={require("@/assets/images/doggo.jpg")}
-              style={styles.pfpImg}
+              source={doggoImg}
+              style={[styles.pfpImg, isMobile && styles.pfpImgMobile]}
             />
           </View>
-          <View style={styles.parentContainer}>
-            <View style={styles.childContainer}>
+
+          <View
+            style={[
+              styles.parentContainer,
+              isMobile && styles.parentContainerMobile,
+            ]}
+          >
+            <View
+              style={[
+                styles.childContainer,
+                isMobile && styles.childContainerMobile,
+              ]}
+            >
               <Intro type="title">About Me</Intro>
               <Intro type="description">
                 As a{" "}
@@ -120,7 +158,7 @@ export default function HomeScreen() {
                 <Intro type="highlighted_desc">
                   Web and Mobile Applications.
                 </Intro>{" "}
-                Currently, I’m most familiar in{" "}
+                Currently, I'm most familiar in{" "}
                 <Intro type="highlighted_desc">JavaScript</Intro>,{" "}
                 <Intro type="highlighted_desc">Java</Intro>,{" "}
                 <Intro type="highlighted_desc">Python</Intro>,{" "}
@@ -131,10 +169,7 @@ export default function HomeScreen() {
               </Intro>
             </View>
 
-            <Image
-              source={require("@/assets/images/developer.png")}
-              style={styles.devImg}
-            />
+            {!isMobile && <Image source={developerImg} style={styles.devImg} />}
           </View>
 
           <View style={styles.socialsContainer}>
@@ -169,6 +204,10 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "web" ? 120 : 20,
     paddingBottom: Platform.OS === "web" ? 20 : 120,
   },
+  scrollContainerMobile: {
+    paddingHorizontal: 20,
+    paddingTop: 100,
+  },
   parentContainer: {
     flex: 1,
     flexDirection: "row",
@@ -178,10 +217,21 @@ const styles = StyleSheet.create({
     gap: 80,
     marginBottom: 100,
   },
+  parentContainerMobile: {
+    flexDirection: "column",
+    marginBottom: 60,
+    gap: 0,
+  },
   childContainer: {
     maxWidth: Platform.OS === "web" ? 500 : "80%",
     flex: 1,
     flexDirection: "column",
+  },
+  childContainerMobile: {
+    maxWidth: "100%",
+    width: "100%",
+    marginTop: 60,
+    alignItems: "center",
   },
   pfpImg: {
     width: 300,
@@ -190,6 +240,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 5,
     borderColor: "white",
+  },
+  pfpImgMobile: {
+    width: 200,
+    height: 200,
+    borderRadius: 200 / 2,
+    marginTop: -100,
   },
   devImg: {
     width: 300,

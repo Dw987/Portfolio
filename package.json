@@ -5,8 +5,10 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "clean": "if exist dist rmdir /s /q dist && if exist build rmdir /s /q build && if exist web-build rmdir /s /q web-build && if exist .expo rmdir /s /q .expo",
+    "build": "npx expo export -p web && copy .nojekyll dist\\.nojekyll",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist --dotfiles",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",

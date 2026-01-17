@@ -2,10 +2,11 @@ import { Stack, Tabs } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Platform, Pressable, View, StyleSheet } from "react-native";
 
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { HapticTab } from "@/components/haptic-tab";
 import { useIsFocused } from "@react-navigation/native";
 import { useSharedValue, withSpring } from "react-native-reanimated";
+import homeIcon from "@/assets/images/logo/home.png";
+import { TabIcon } from "@/components/tab-icon";
 
 const color = "#fbedff";
 
@@ -107,22 +108,17 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={logoSize} name="house.fill" color={color} />
+            <TabIcon source={homeIcon} size={logoSize} color={color} />
           ),
         }}
       />
 
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={logoSize} name="paperplane.fill" color={color} />
-          ),
+          href: null,
         }}
-      /> */}
-
-      <Tabs.Screen name="custom" options={{}} />
+      />
     </Tabs>
   );
 }

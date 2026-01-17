@@ -1,98 +1,223 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  FlatList,
+  Image,
+  ImageBackground,
+  Linking,
+  Pressable,
+} from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { Intro } from "@/components/intro";
+import { HelloWave } from "@/components/hello-wave";
+import { TextAnimator } from "@/components/type-animation";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ScrollView } from "react-native";
+import React from "react";
+import Footer, {
+  useFooterScroll,
+  styles as scrollStyles,
+} from "../../components/footer";
+
+type SocialLogoProps = {
+  source: any;
+  url: string;
+};
+
+function SocialLogo({ source, url }: SocialLogoProps) {
+  const [hovered, setHovered] = React.useState(false);
+
+  return (
+    <Pressable
+      onPress={() => Linking.openURL(url)}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={[styles.socialsLogoContainer, hovered && styles.socialsLogoHover]}
+    >
+      <Image source={source} style={styles.socialsLogo} />
+    </Pressable>
+  );
+}
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const IMAGES_DATA = [
+    {
+      id: "1",
+      source: require("@/assets/images/logo/email.png"),
+      url: "mailto:dickie.wongwh@gmail.com",
+    },
+    {
+      id: "2",
+      source: require("@/assets/images/logo/github.png"),
+      url: "https://github.com/Dw987",
+    },
+    {
+      id: "3",
+      source: require("@/assets/images/logo/linkedin.png"),
+      url: "https://www.linkedin.com/in/dickie-wong-9407831a8",
+    },
+  ];
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const renderImageItem = ({
+    item,
+  }: {
+    item: { id: string; source: any; url: string };
+  }) => <SocialLogo source={item.source} url={item.url} />;
+
+  const { opacity, onScroll } = useFooterScroll();
+  return (
+    <ImageBackground
+      source={require("@/assets/images/purple_space_stars.jpg")}
+      style={{ flex: 1, width: "100%", height: "100%" }}
+      resizeMode="cover"
+    >
+      <SafeAreaProvider>
+        <ScrollView
+          contentContainerStyle={[styles.scrollContainer]}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+        >
+          <View style={styles.parentContainer}>
+            <View style={styles.childContainer}>
+              <Intro type="subtitle">
+                Hi There ! <HelloWave />
+              </Intro>
+              <Intro type="title">
+                I'M <Intro type="highlighted">DICKIE WONG</Intro>
+              </Intro>
+              <TextAnimator
+                content={[
+                  "Frontend Developer",
+                  "Backend Developer",
+                  "Game Developer",
+                  "Freelancer",
+                ]}
+              />
+            </View>
+            <Image
+              source={require("@/assets/images/doggo.jpg")}
+              style={styles.pfpImg}
+            />
+          </View>
+          <View style={styles.parentContainer}>
+            <View style={styles.childContainer}>
+              <Intro type="title">About Me</Intro>
+              <Intro type="description">
+                As a{" "}
+                <Intro type="highlighted_desc">
+                  fresh Software Engineering graduate
+                </Intro>
+                , I am eager to start my career in technology. I am motivated to
+                apply my skills, contribute to innovative projects, and grow
+                professionally. I enjoy learning new technologies, collaborating
+                with experienced mentors, and thriving in fast-paced
+                environments that challenge me to improve.
+                {"\n"}
+                {"\n"}I am also passionate about{" "}
+                <Intro type="highlighted_desc">Full-Stack Development</Intro>{" "}
+                and <Intro type="highlighted_desc">Game Development</Intro>, and
+                enjoy building engaging, interactive experiences from the ground
+                up. I am eager to work on{" "}
+                <Intro type="highlighted_desc">
+                  Web and Mobile Applications.
+                </Intro>{" "}
+                Currently, I’m most familiar in{" "}
+                <Intro type="highlighted_desc">JavaScript</Intro>,{" "}
+                <Intro type="highlighted_desc">Java</Intro>,{" "}
+                <Intro type="highlighted_desc">Python</Intro>,{" "}
+                <Intro type="highlighted_desc">Angular</Intro>,{" "}
+                <Intro type="highlighted_desc">Flutter</Intro>, and{" "}
+                <Intro type="highlighted_desc">C++</Intro>, and I enjoy working
+                across both backend and frontend stacks.
+              </Intro>
+            </View>
+
+            <Image
+              source={require("@/assets/images/developer.png")}
+              style={styles.devImg}
+            />
+          </View>
+
+          <View style={styles.socialsContainer}>
+            <Intro type="title" style={{ fontFamily: "oswald" }}>
+              Find me on
+            </Intro>
+            <View>
+              <FlatList
+                data={IMAGES_DATA}
+                renderItem={renderImageItem}
+                keyExtractor={(item) => item.id}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+            <Intro type="subtitle" style={{ fontFamily: "bubbler-one" }}>
+              Feel free to <Intro type="highlighted_desc">connect </Intro>with
+              me
+            </Intro>
+          </View>
+          <Footer opacity={opacity} />
+        </ScrollView>
+      </SafeAreaProvider>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  scrollContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+    paddingTop: Platform.OS === "web" ? 120 : 20,
+    paddingBottom: Platform.OS === "web" ? 20 : 120,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  parentContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    gap: 80,
+    marginBottom: 100,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  childContainer: {
+    maxWidth: Platform.OS === "web" ? 500 : "80%",
+    flex: 1,
+    flexDirection: "column",
+  },
+  pfpImg: {
+    width: 300,
+    height: 300,
+    borderRadius: 300 / 2,
+    overflow: "hidden",
+    borderWidth: 5,
+    borderColor: "white",
+  },
+  devImg: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+  },
+  socialsContainer: {
+    alignItems: "center",
+    alignContent: "center",
+    marginTop: 150,
+    marginBottom: 100,
+  },
+  socialsLogo: {
+    width: 35,
+    height: 35,
+  },
+  socialsLogoContainer: {
+    marginHorizontal: 10,
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
+    backgroundColor: "white",
+    marginBottom: 20,
+    marginTop: 5,
+  },
+  socialsLogoHover: {
+    transform: [{ scale: 1.1 }],
   },
 });

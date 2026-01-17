@@ -1,0 +1,81 @@
+import { StyleSheet, Text, type TextProps } from "react-native";
+
+import { useThemeColor } from "@/hooks/use-theme-color";
+
+const defaultColor = "#fbedff";
+const highlightColor = "#d278f3";
+
+export type IntroProps = TextProps & {
+  lightColor?: string;
+  darkColor?: string;
+  type?:
+    | "default"
+    | "title"
+    | "highlighted"
+    | "subtitle"
+    | "description"
+    | "highlighted_desc";
+};
+
+export function Intro({
+  style,
+  lightColor,
+  darkColor,
+  type = "default",
+  ...rest
+}: IntroProps) {
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
+  return (
+    <Text
+      style={[
+        { color },
+        type === "default" ? styles.default : undefined,
+        type === "title" ? styles.title : undefined,
+        type === "highlighted" ? styles.highlighted : undefined,
+        type === "subtitle" ? styles.subtitle : undefined,
+        type === "description" ? styles.description : undefined,
+        type === "highlighted_desc" ? styles.highlighted_desc : undefined,
+        style,
+      ]}
+      {...rest}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  default: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: defaultColor,
+  },
+  highlighted: {
+    fontSize: 35,
+    fontWeight: "bold",
+    color: highlightColor,
+  },
+  highlighted_desc: {
+    fontWeight: "bold",
+    color: highlightColor,
+  },
+  title: {
+    fontSize: 35,
+    fontWeight: "bold",
+    lineHeight: 32,
+    marginTop: 20,
+    marginBottom: 20,
+    color: defaultColor,
+  },
+  subtitle: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: defaultColor,
+  },
+  description: {
+    textAlign: "justify",
+    lineHeight: 40,
+    fontSize: 25,
+    flexDirection: "row",
+    color: defaultColor,
+  },
+});

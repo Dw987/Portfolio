@@ -1,7 +1,6 @@
 import {
   FlatList,
   Image,
-  ImageBackground,
   Linking,
   Pressable,
   useWindowDimensions,
@@ -14,10 +13,9 @@ import { TextAnimator } from "@/components/type-animation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ScrollView } from "react-native";
 import React from "react";
-import Footer, {
-  useFooterScroll,
-  styles as scrollStyles,
-} from "../../components/footer";
+import Footer, { useFooterScroll } from "../../components/footer";
+import ScreenWrapper from "../../components/screenImg";
+import Scroller from "@/components/scrollView";
 
 // Import images
 import emailIcon from "@/assets/images/logo/email.png";
@@ -25,7 +23,6 @@ import githubIcon from "@/assets/images/logo/github.png";
 import linkedinIcon from "@/assets/images/logo/linkedin.png";
 import doggoImg from "@/assets/images/doggo.jpg";
 import developerImg from "@/assets/images/developer.png";
-import backgroundImg from "@/assets/images/purple_space_stars.jpg";
 
 type SocialLogoProps = {
   source: any;
@@ -50,7 +47,6 @@ function SocialLogo({ source, url }: SocialLogoProps) {
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
-  const isTablet = width >= 768 && width < 1024;
 
   const IMAGES_DATA = [
     {
@@ -76,23 +72,12 @@ export default function HomeScreen() {
     item: { id: string; source: any; url: string };
   }) => <SocialLogo source={item.source} url={item.url} />;
 
-  const { opacity, onScroll } = useFooterScroll();
+  // const { opacity, onScroll } = useFooterScroll();
 
   return (
-    <ImageBackground
-      source={backgroundImg}
-      style={{ flex: 1, width: "100%", height: "100%" }}
-      resizeMode="cover"
-    >
+    <ScreenWrapper>
       <SafeAreaProvider>
-        <ScrollView
-          contentContainerStyle={[
-            styles.scrollContainer,
-            isMobile && styles.scrollContainerMobile,
-          ]}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-        >
+        <Scroller>
           <View
             style={[
               styles.parentContainer,
@@ -190,10 +175,9 @@ export default function HomeScreen() {
               me
             </Intro>
           </View>
-          <Footer opacity={opacity} />
-        </ScrollView>
+        </Scroller>
       </SafeAreaProvider>
-    </ImageBackground>
+    </ScreenWrapper>
   );
 }
 

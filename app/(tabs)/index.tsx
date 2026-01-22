@@ -13,7 +13,6 @@ import { TextAnimator } from "@/components/type-animation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ScrollView } from "react-native";
 import React from "react";
-import Footer, { useFooterScroll } from "../../components/footer";
 import ScreenWrapper from "../../components/screenImg";
 import Scroller from "@/components/scrollView";
 
@@ -71,8 +70,6 @@ export default function HomeScreen() {
   }: {
     item: { id: string; source: any; url: string };
   }) => <SocialLogo source={item.source} url={item.url} />;
-
-  // const { opacity, onScroll } = useFooterScroll();
 
   return (
     <ScreenWrapper>

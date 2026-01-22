@@ -1,27 +1,33 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { Intro } from "@/components/intro";
 import ScreenWrapper from "@/components/screenImg";
+import Scroller from "@/components/scrollView";
+import AnimatedFlipCard from "@/components/flipCard";
 
 export default function TabTwoScreen() {
   return (
     <ScreenWrapper>
-      <Intro type="title">
-        I'M <Intro type="highlighted">DICKIE WONG</Intro>
-      </Intro>
+      <Scroller>
+        <View style={styles.parentContainer}>
+          <Intro type="title">
+            My Recent <Intro type="highlighted">Works</Intro>
+          </Intro>
+          <Intro type="subtitle" style={{ fontFamily: "roboto-thin" }}>
+            Here are a few projects I've work on recently
+          </Intro>
+          <AnimatedFlipCard />
+        </View>
+      </Scroller>
     </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
-  },
-  titleContainer: {
-    flexDirection: "row",
-    gap: 8,
+  parentContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    marginTop: 100,
   },
 });

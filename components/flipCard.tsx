@@ -18,6 +18,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { VideoView, useVideoPlayer } from "expo-video";
+import { TabIcon } from "@/components/tab-icon";
+import tapIcon from "../assets/images/logo/tap.png";
 
 const projectsNo = [
   {
@@ -28,14 +30,25 @@ const projectsNo = [
     githubUrl: "https://github.com/Dw987/PawSwipe",
     demoUrl: "https://dw987.github.io/PawSwipe/",
     color: "#b6cff7",
+    video: require("../assets/vid/pawSwipeDemo.mp4"),
+    techStack: ["React Router", "TypeScript", "Tailwind"],
   },
   {
     id: "2",
-    title: "Mental Health App",
-    description: "React Native + Expo",
-    githubUrl: "https://github.com/Dw987/fyp_mental_health",
-    demoUrl: "https://soumyajit.vercel.app/project",
+    title: "My Portfolio",
+    description:
+      "This is an interactive portfolio for myself which will be updated overtime to showcase my progress and project. \n\nIt is built in React Native with Expo and TypeScript, styled using React Native StyleSheet, with animated gestures and Reanimated for smooth flip animations.",
+    githubUrl: "https://github.com/Dw987/Portfolio",
+    demoUrl: "https://dw987.github.io/Portfolio/",
     color: "#baeee5",
+    video: require("../assets/vid/portfolioDemo.mp4"),
+    techStack: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "React Native Reanimated",
+      "CSS",
+    ],
   },
 ];
 
@@ -46,39 +59,77 @@ type Project = {
   color: string;
   githubUrl: string;
   demoUrl: string;
+  video: any;
+  techStack: string[];
 };
 
-export function DemoVideo() {
-  const player = useVideoPlayer(
-    require("../assets/vid/pawSwipeDemo.mp4"),
-    (player) => {
-      player.loop = true;
-      player.muted = true;
-    },
-  );
+type DemoVideoProps = {
+  source: any;
+};
 
+export function DemoVideo({ source }: DemoVideoProps) {
+  const player = useVideoPlayer(source, (player) => {
+    player.loop = true;
+    player.muted = true;
+  });
+  const [isPlaying, setIsPlaying] = useState(true);
   useEffect(() => {
     player.play();
   }, []);
 
+  const togglePlay = () => {
+    if (isPlaying) {
+      player.pause();
+    } else {
+      player.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable onPress={togglePlay} style={styles.vidContainer}>
       <VideoView
         player={player}
         style={styles.screen}
         contentFit="contain"
-        allowsFullscreen={true}
+        allowsFullscreen
       />
-    </View>
+    </Pressable>
   );
 }
 
-const RegularContent = ({ title, color }: { title: string; color: string }) => {
+const TechStackChips = ({ stack }: { stack: string[] }) => {
+  return (
+    <View style={chipStyles.container}>
+      {stack.map((tech) => (
+        <View key={tech} style={chipStyles.chip}>
+          <Text style={chipStyles.text}>{tech}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const RegularContent = ({
+  title,
+  video,
+  techStack,
+}: {
+  title: string;
+  color: string;
+  video: any;
+  techStack: string[];
+}) => {
   return (
     <View style={regularContentStyles.card}>
       <Text style={regularContentStyles.text}>{title}</Text>
       <View style={styles.laptopFrame}>
-        <DemoVideo />
+        <DemoVideo source={video} />
+      </View>
+      <TechStackChips stack={techStack} />
+      <View style={regularContentStyles.hintContainer}>
+        <Text style={regularContentStyles.hintText}>Tap to flip </Text>
+        <TabIcon source={tapIcon} size={24} color="white" />
       </View>
     </View>
   );
@@ -245,7 +296,12 @@ const ProjectCard = ({ project }: { project: Project }) => {
         isFlipped={isFlipped}
         cardStyle={styles.flipCard}
         RegularContent={
-          <RegularContent title={project.title} color={project.color} />
+          <RegularContent
+            title={project.title}
+            color={project.color}
+            video={project.video}
+            techStack={project.techStack}
+          />
         }
         FlippedContent={
           <FlippedContent
@@ -315,7 +371,7 @@ const flipCardStyles = StyleSheet.create({
 const regularContentStyles = StyleSheet.create({
   card: {
     flex: 1,
-    backgroundColor: "#b6cff7",
+    backgroundColor: "#4f3d78",
     borderRadius: 16,
     justifyContent: "flex-start",
     alignItems: "center",
@@ -325,17 +381,49 @@ const regularContentStyles = StyleSheet.create({
     color: "white",
     fontSize: 25,
     fontWeight: "bold",
-    paddingBottom: 80,
+    paddingBottom: 45,
+  },
+  hintContainer: {
+    position: "absolute",
+    bottom: 20,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  hintText: {
+    fontSize: 12,
+    color: "rgba(255,255,255,0.6)",
+    fontStyle: "italic",
+    letterSpacing: 0.5,
+  },
+});
+
+const chipStyles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginTop: 12,
+    paddingHorizontal: 10,
+  },
+  chip: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.18)",
+    borderWidth: 1,
+    borderColor: "rgba(180,150,255,0.4)",
+    margin: 4,
+  },
+  text: {
+    color: "white",
+    fontSize: 12,
+    letterSpacing: 0.5,
   },
 });
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: 300,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   buttonContainer: {
     marginTop: 16,
     justifyContent: "center",
@@ -355,10 +443,15 @@ const styles = StyleSheet.create({
     height: 500,
     backfaceVisibility: "hidden",
   },
+  vidContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   laptopFrame: {
     width: "80%",
     height: 200,
-    backgroundColor: "rgba(0,0,0,0.2)",
+    backgroundColor: "rgba(10, 6, 20, 0.75)",
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",

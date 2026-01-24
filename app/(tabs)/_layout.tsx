@@ -8,7 +8,7 @@ import { useSharedValue, withSpring } from "react-native-reanimated";
 import { TabIcon } from "@/components/tab-icon";
 
 import homeIcon from "@/assets/images/logo/home.png";
-import aboutMeIcon from "@/assets/images/logo/aboutMe.png";
+import myProjects from "@/assets/images/logo/projects.png";
 
 const color = "#fbedff";
 
@@ -116,11 +116,11 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="about"
+        name="projects"
         options={{
-          title: "About",
+          title: "Projects",
           tabBarIcon: ({ color }) => (
-            <TabIcon source={aboutMeIcon} size={logoSize} color={color} />
+            <TabIcon source={myProjects} size={logoSize} color={color} />
           ),
         }}
       />
